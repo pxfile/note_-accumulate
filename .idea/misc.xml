@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+<<<<<<< HEAD
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_3" assert-keyword="false" jdk-15="false" />
+=======
   <component name="ProjectRootManager" version="2" assert-keyword="false" jdk-15="false" />
+>>>>>>> master
   <component name="SuppressionsComponent">
     <option name="suppComments" value="[]" />
   </component>
