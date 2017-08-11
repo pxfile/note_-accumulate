@@ -1,7 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="89b757e4-3e45-48c1-9af3-3d4f1130b429" name="Default" comment="" />
+=======
+    <list default="true" id="89b757e4-3e45-48c1-9af3-3d4f1130b429" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/qaplug_profiles.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Android开发艺术探索笔记/Android开发艺术探索——新的征程，程序人生路漫漫！.md" afterPath="$PROJECT_DIR$/Reading-Notes/Android开发艺术探索笔记/Android开发艺术探索——新的征程，程序人生路漫漫！.md" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Android开发艺术探索笔记/第一章：Activity的生命周期和启动模式.md" afterPath="$PROJECT_DIR$/Reading-Notes/Android开发艺术探索笔记/第一章：Activity的生命周期和启动模式.md" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Android开发艺术探索笔记/第三章：View的事件体系（上）.md" afterPath="$PROJECT_DIR$/Reading-Notes/Android开发艺术探索笔记/第三章：View的事件体系（上）.md" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Android开发艺术探索笔记/第三章：View的事件体系（下）.md" afterPath="$PROJECT_DIR$/Reading-Notes/Android开发艺术探索笔记/第三章：View的事件体系（下）.md" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Android开发艺术探索笔记/第二章：IPC机制（上）.md" afterPath="$PROJECT_DIR$/Reading-Notes/Android开发艺术探索笔记/第二章：IPC机制（上）.md" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Android开发艺术探索笔记/第二章：IPC机制（下）.md" afterPath="$PROJECT_DIR$/Reading-Notes/Android开发艺术探索笔记/第二章：IPC机制（下）.md" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Android开发艺术探索笔记/第二章：IPC机制（中）.md" afterPath="$PROJECT_DIR$/Reading-Notes/Android开发艺术探索笔记/第二章：IPC机制（中）.md" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Android开发艺术探索笔记/第四章：View的工作原理（上）.md" afterPath="$PROJECT_DIR$/Reading-Notes/Android开发艺术探索笔记/第四章：View的工作原理（上）.md" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Android开发艺术探索笔记/第四章：View的工作原理（下）.md" afterPath="$PROJECT_DIR$/Reading-Notes/Android开发艺术探索笔记/第四章：View的工作原理（下）.md" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/StatusBarUtil/StatusBarUtil 状态栏.md" afterPath="$PROJECT_DIR$/Accumulation-Business/StatusBarUtil/StatusBarUtil 状态栏.md" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/三方登录/微信登录.md" afterPath="$PROJECT_DIR$/Accumulation-Business/三方登录/微信登录.md" />
+    </list>
+>>>>>>> master
     <ignored path="note_accumulate.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -20,11 +41,14 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+<<<<<<< HEAD
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
         <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
+=======
+>>>>>>> master
   </component>
   <component name="GradleLocalSettings">
     <option name="externalProjectsViewState">
@@ -86,6 +110,12 @@
       </pane>
     </panes>
   </component>
+<<<<<<< HEAD
+=======
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+>>>>>>> master
   <component name="RunManager">
     <configuration default="true" type="Application" factoryName="Application">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
@@ -168,6 +198,7 @@
       <option name="presentableId" value="Default" />
       <updated>1502438527762</updated>
     </task>
+<<<<<<< HEAD
     <task id="LOCAL-00001" summary="添加新文档">
       <created>1502439589849</created>
       <option name="number" value="00001" />
@@ -183,6 +214,8 @@
       <updated>1502440073751</updated>
     </task>
     <option name="localTasksCounter" value="3" />
+=======
+>>>>>>> master
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -196,9 +229,15 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32923368" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+<<<<<<< HEAD
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32923368" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+=======
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32923368" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+>>>>>>> master
       <window_info id="Analysis" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -225,11 +264,14 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+<<<<<<< HEAD
   <component name="VcsManagerConfiguration">
     <MESSAGE value="添加新文档" />
     <MESSAGE value="移动文档目录" />
     <option name="LAST_COMMIT_MESSAGE" value="移动文档目录" />
   </component>
+=======
+>>>>>>> master
   <component name="XDebuggerManager">
     <breakpoint-manager />
     <watches-manager />
