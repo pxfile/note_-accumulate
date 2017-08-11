@@ -45,4 +45,34 @@
  (3)官方在Android6.0中提供了亮色状态栏模式，配置很简单
  ![](http://ou21vt4uz.bkt.clouddn.com/StatusBarUtil9.png)
  
+* **怎么样设置图片通顶**
 
+ * 1.复写图片通顶方法
+ 
+ ```
+ @Override     
+    public boolean isImageViewStatusBar() {
+        return true;
+    }
+    
+ ```
+  * 2.页面layout文件中添加一个占位View，目的是为了防止页面视图与状态栏内容重叠
+ 
+  ```
+  <View
+        android:id="@+id/personal_top_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/white"/>
+  ```
+ * 3.动态设置占位View的高度，因为不同分辨率手机状态栏高度也不同
+ 
+  ```
+  //生成一个和状态栏大小相同的矩形条
+    @Bind(R.id.personal_top_view)
+    public View statusBarView;
+  ```
+  ```
+  statusBarView.getLayoutParams().height = StatusBarUtil.getStatusBarHeight(mContext); 
+  ```
+  以上就是最基本的图片通顶的设置了，接下来可以需要根据不同的UI需求做相应的处理。
