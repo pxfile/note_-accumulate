@@ -8,3 +8,5 @@
 * 4）Https协议需要到CA申请证书
 
 参考 [Http和Https的区别](http://www.jianshu.com/p/37654eb66b58)
+
+参考 [SSL/TLS协议运行机制的概述](http://www.ruanyifeng.com/blog/2014/02/ssl_tls.html)
