@@ -115,6 +115,20 @@ public static int getSize(int measureSpec) {
 }
 ```
 
+**OnMeasure 方法几个参数对应含义**
+
+首先我们要理解的是 widthMeasureSpec, heightMeasureSpec 这两个参数是从哪里来的？onMeasure() 函数由包含这个 View 的具体的 ViewGroup 调用，因此值也是从这个ViewGroup 中传入的。这里我直接给出答案：子类 View 的这两个参数，由 ViewGroup 中的 layout_width，layout_height 和 padding 以及 View 自身的 layout_margin 共同决定。权值 weight 也是尤其需要考虑的因素，有它的存在情况可能会稍微复杂点。
+了解了这两个参数的来源，还要知道这两个值的作用。我们只取 heightMeasureSpec 作说明。这个值由高 32 位和低 16 位组成，高 32 位保存的值叫 specMode，可以通过如代码中所示的 MeasureSpec.getMode() 获取；低 16 位为 specSize，同样可以由MeasureSpec.getSize() 获取。那么 specMode 和 specSize 的作用有是什么呢？要想知道这一点，我们需要知道代码中的最后一行，所有的 View 的 onMeasure() 的最后一行都会调用 setMeasureDimension() 函数的作用——这个函数调用中传进去的值是 View 最终的视图大小。也就是说 onMeasure() 中之前所作的所有工作都是为了最后这一句话服务的。
+
+我们知道在 ViewGroup 中，给 View 分配的空间大小并不是确定的，有可能随着具体的变化而变化，而这个变化的条件就是传到 specMode 中决定的，specMode 一共有三种可能：
+
+MeasureSpec.EXACTLY：父视图希望子视图的大小应该是 specSize 中指定的。
+
+MeasureSpec.AT_MOST：子视图的大小最多是 specSize 中指定的值，也就是说不建议子视图的大小超过 specSize 中给定的值。
+
+MeasureSpec.UNSPECIFIED：我们可以随意指定视图的大小。)
+
+
 
 ###onLayout
 
@@ -524,3 +538,4 @@ public class MetrailEditText extends EditText {
 
 - 邮箱 ：charon.chui@gmail.com  
 - Good Luck! I
+

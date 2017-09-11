@@ -267,3 +267,7 @@ public void onReceive(Context context, Intent intent) {
     }  
 ```
 
+**广播怎么不跨进程**
+
+无论是使用扩展变量作用域、基于接口的回调还是Handler-post/Handler-Message等方式，都可以直接处理此类问题，若适用广播机制，显然有些“杀鸡牛刀”的感觉，会显太“重”；
+
