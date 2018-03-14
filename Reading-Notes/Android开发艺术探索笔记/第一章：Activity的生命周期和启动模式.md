@@ -1,11 +1,11 @@
-#第一章：Activity的生命周期和启动模式
+# 第一章：Activity的生命周期和启动模式
 ---
 >怀着无比崇敬的心情翻开了这本书，路漫漫其修远兮，程序人生，为自己加油！
 
-##一.序
+## 一.序
 >作为这本书的第一章，主席还是把Activity搬上来了，也确实，和Activity打交道的次数基本上是最多的，而且他的内容和知识点也是很多的，非常值得我们优先把他掌握，Activity中文翻译过来就是"活动"的意思，但是主席觉得这样翻译有些生硬，直接翻译成“界面”可能更好，的确，Activity主要也是用于UI效果的呈现，不过两者翻译都不为过，我们知其意就行了，正常情况下，我们除了Window,Dialog,Toast，我们还能见到的就只有Activity了，他需要setContentView()去绑定一个视图View作为效果的呈现，然而，作为一本高质量的进阶书。肯定不会去围绕着入门知识讲解，本章的侧重点在于对Activity使用过程中搞不清楚的概念，生命周期和启动模式已经IntentFilter的匹配规则分析，毕竟Activity在异常状态下的生命周期是多样化的，至于Activity的启动模式和各种各样的Flags,更是让很多人摸不着头脑，还有隐式启动Activity中也有着复杂的Intent匹配过程，所以我们还是一步步的去学习下去，真正的了解Activity这个小家伙！
 
-##二.Activity的生命周期全面分析
+## 二.Activity的生命周期全面分析
 >Activity的生命周期，本章主要讲解两个方面
 
 - 典型情况下的生命周期
@@ -13,7 +13,7 @@
 
 >典型情况是指用户参与的情况下，Activity所经过的生命周期的变化，异常情况下的话，就有多种可能了，比如系统回收或者由于当前设备的Configuration发生改变从而导致Activity被销毁重建，异常情况下的生命周期的关注点和典型情况下有些不同，所以要分开来描述才能描述的清楚些
 
-###1.典型情况下的生命周期分析
+### 1.典型情况下的生命周期分析
 >在正常的情况下，生命周期会经历以下的生命周期
 
 - onCreate：表示Activity正在被创建，这是生命周期的第一个方法，在这个方法中，我们可以做一些初始化的工作，比如调用onContentView去加载界面布局资源，初始化Activity所需数据等
@@ -42,7 +42,7 @@
 
 - 3.当用户再次回到原来的Activity，回调如下：onRestart ——> onStart ——> onResume
 
-- 4.d当用户按back键的时候回调如下：onPause ———> onStop ——> onDestroy
+- 4.当用户按back键的时候回调如下：onPause ———> onStop ——> onDestroy
 
 - 5.当Activity被系统回收的时候再次打开，生命周期回调方法和1是一样的，但是你要注意一下就是只是生命周期一样，不代表所有的进程都是一样的，这个问题等下回详细分析
 
@@ -114,7 +114,7 @@ private void handlerLaunchActivity(ActivityClientRecord r, Intent customIntent){
 
 >c从上面的分析可以看出，当新的Activity启动的时候，旧的Activity的onPause方法会先执行，然后才启动新的Activity，到底是不是这样尼？我们可以写一个小栗子来验证一下，如下是两个Activity的代码，在MainActivity中点击按钮可以跳转到SecondActivity，同时为了分析生命周期，我们把log日志也打出来
 
-####MainActivity
+#### MainActivity
 
 ```
 package com.liuguilin.activitysample;
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
 
 ```
 
-####SecondActivity
+#### SecondActivity
 
 ```
 package com.liuguilin.activitysample;
@@ -203,17 +203,19 @@ public class SecondActivity extends AppCompatActivity {
 >通过这个生命周期我们可以观察到，旧的Activity的onPause先调用，然后新的Activity才启动，这也证实了我们上面的分析原理，也许有人问，你只是分析了Andorid5.0的源码，你怎么所有的版本源码逻辑都相同，的确，我们不能把所有的版本都概括，但是作为Android的一个运行过程的基本逻辑，随着版本的更新并不会很大的改变，因为Android也需要兼容性，，不能说在同一个版本上运行有两种不同的逻辑，那根本不可能，关于这一点，我们要把握一个度，就是对于Android的基本运行机制，的不同，Android不能在onPause中做重量级的操作，因为必须在onPause执行完成以后新的Activity才能Resume，从这一点我们也间接性的证明了我们的结论，通过分析这个问题，我们知道onPause和onStop都不能做耗时的操作，尤其是onPause，这也意味着，我们应当尽量的在onStop中做操作，从而使新的Activity尽快显示出来并且换到前后台
 
 
-##三.异常情况下的生命周期分析
+## 三.异常情况下的生命周期分析
+
 >上一节我们分析的是正常事情下的生命周期，但是我们写程序也不要理想化，居多的问题就是出在异常情况下，我们知道,Activity除了受用户操作导致的正常生命周期的调度，同时还会存在一些异常的情况，比如当资源相关的系统配置发生改变以及系统内存不足的时候，Activity就有可能被杀死，下面我们具体来分析下这几种情况
 
-###1.情况1：资源相关的系统配置发生改变导致Activity被杀死并重新创建
+### 1.资源相关的系统配置发生改变导致Activity被杀死并重新创建
+
 >理解这个问题，首先要对系统的资源加载有一定的了解，这里就不详细分析系统资源加载的机制了，但是我们简单说明一下，拿最简单的图片来说，当我们把一张图片挡在drawable中的时候，就可以通过Resources去获取这张图片了，同时为了兼容不同的设备，我们可能还需要在其他一些目录下放置不同的图片，比如drawable-xhdpi之类的，当应用程序启动时，系统会根据当前设备的情况去加载合适的Resources资源，比如说横屏手机和竖屏手机会拿着两张不同的图片（设定了landscape或者portrait状态下的图片），比如之前Activity处于竖屏，我们突然旋转屏幕，由于系统配置发生了改变，在默认情况下，Activity会被销毁并且重新创建，当然我们也可以阻止系统重新创建我们的Activity
 
 >默认情况下，如果我们的Activity不做特殊处理，那么当系统配置发生改变之后，Activity就会销毁并且重新创建，可以看图
 
 ![这里写图片描述](http://img.blog.csdn.net/20160910132814613)
 
->当系统配置发生改变的时候，Activity会被销毁，其onPause，onStop,onDestroy均会被调用，同时由于Activity是异常情况下终止的，系统会调用onSaveInstanceState来保存当前Activity的状态，这个方法调用的时机是在onStop之前，他和onPause没有既定的时序关系，他即可能在onPause之前调用，也有可能在之后调用，需要强调的是，这个方法只出现在Activity被异常终止的情况下，正常情况下是不会走这个方法的吗，当我们onSaveInstanceState保存到Bundler对象作为参数传递给onRestoreInstanceState和onCreate方法，因此我们可以通过onRestoreInstanceState和onCreate方法来判断Activity是否被重建。如果被重建了，我们就取出之前的数据恢复，从时序上来说，onRestoreInstanceState的调用时机应该在onStart之后
+>当系统配置发生改变的时候，Activity会被销毁，其onPause，onStop,onDestroy均会被调用，同时由于Activity是异常情况下终止的，系统会调用onSaveInstanceState来保存当前Activity的状态，这个方法调用的时机是在onStop之前，他和onPause没有既定的时序关系，他即可能在onPause之前调用，也有可能在之后调用，需要强调的是，这个方法只出现在Activity被异常终止的情况下，正常情况下是不会走这个方法的，当我们onSaveInstanceState保存到Bundler对象作为参数传递给onRestoreInstanceState和onCreate方法，因此我们可以通过onRestoreInstanceState和onCreate方法来判断Activity是否被重建。如果被重建了，我们就取出之前的数据恢复，从时序上来说，onRestoreInstanceState的调用时机应该在onStart之后
 
 
 >同时我们要知道，在onSaveInstanceState和onRestoreInstanceState方法中，系统自动为我们做了一些恢复工作，当Activity在异常情况下需要重新创建时，系统会默认我们保存当前的Activity视图架构，并且为我们恢复这些数据，比如文本框中用户输入的数据，ListView滚动的位置，这些View相关的状态系统都会默认恢复，具体针对某一个特定的View系统能为们恢复那些数据？我们可以查看View的源码，和Activity一样，每一个View都有onSaveInstanceState和onRestoreInstanceState这两个方法，看一下他们的实现，就能知道系统能够为每一个View恢复数据
@@ -322,7 +324,8 @@ public class MainActivity extends AppCompatActivity {
 
 >Activity销毁后调用了onSaveInstanceState来保存数据，重新创建以后再onCreate和onRestoreInstanceState中能恢复数据，这个正好证明了我们刚才的分析，针对onSaveInstanceState我们有一点要说明，那就是系统只会在即将被销毁并且有机会重新显示的情况下才会去调用它，考虑到这一种情况，当Activity正常销毁的时候，系统不会调用onSaveInstanceState，因为被销毁的Activity不可能再次被显示出来，这句话不好理解，但是我们可以对比一下旋转屏幕所造成的Activity异常销毁，这个过程和正常停止的Activity是不一样的，因为旋转屏幕之后，Activity被销毁的同时会立即创建新的Activity实例，这个时候Activcity有机会再次立刻显示，所以系统进行了数据存储，这里可以简单的这么理解，系统只在Activity异常终止的情况下才会调用onSaveInstanceState和onRestoreInstanceState来存储和恢复数据，其他情况不会触发
 
-###2.情况2：资源内存不足导致低优先级的Activity被杀死
+### 2.资源内存不足导致低优先级的Activity被杀死
+
 >这个情况我们不好模拟，但是其数据的存储和恢复过程和情况一是一致的，这里我们描述一下Activity的优先级情况，Activity按照优先级的从高往低，可以分为三种：
 
 - 1.前台Activity:正在和用户交互的Activity，优先级最高
@@ -380,10 +383,10 @@ IMSI网络发生改变,检测到SIM卡，或者更新MCC其中mcc和mnc理论上
 >从上面的属性中我们可以知道，如果我们没有在Activity的configChanges中设备属性的话，当系统发生改变后就会导致Activity重新被创建，上面表格中的项目很多，但是我们常用的只有locale,orientation，keyboardHidden这三个选项，其他用的还是比较少的，这里设置之后显示的效果我就不演示了
 
 
-##四.Activity的启动模式
+## 四.Activity的启动模式
 >Android的启动模式，是很有用的，对于Activity的栈的处理，也是极其讲究的，所以你一定要清除他的标志位和启动模式
 
-###一.Activity的LaunchMode
+### 一.Activity的LaunchMode
 >首先说一下Activity为什么需要启动模式，我们知道，在默认的情况下，当我们多次启动同一个Activity的时候，系统会创建多个实例并把他们一一放入任务栈中，当我们点击back键的时候会发现这些Activity会一一回退，任务栈是一种先进先出的栈结构，这个好理解， 每按一次back键就有一个activity退出栈，知道栈空为止，当这个栈为空的时候，系统就会回收这个任务栈，关于任务栈的系统工作原理，这里我们暂且不说，在后续章节也会介绍任务栈，知道了Activity的启动模式，我们可发现一个问题，：多次启动同一个Activity会创建多个实例，这样是不是很逗，Activity在设计的时候不可能不考虑到这个问题，所以他提供了启动模式来修改系统的默认行为，目前有四种启动模式
 
 - standard

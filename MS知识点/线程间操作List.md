@@ -1,0 +1,197 @@
+线程间操作List
+===
+
+
+
+```
+package com.hlss; 
+
+import java.util.ArrayList; 
+import java.util.Collections; 
+import java.util.List; 
+
+/** 
+* 类描述：多线程处理List 
+* @author Calvin Wu 
+*/ 
+public class MultiThread { 
+
+	// 用Collections.synchronizedList让list线程安全 
+	public final static List<Long> list = Collections.synchronizedList(new ArrayList<Long>()); 
+	
+	public static void main(String[] args) { 
+		// 为List添加100个数据 
+		for (int i = 1; i <= 100; i++) { 
+		list.add(Long.valueOf(i)); 
+		} 
+		
+		MyThread myThread = new MyThread(); 
+		// 开启四个线程处理list数据 
+		Thread t1 = new Thread(myThread); 
+		t1.setName("线程1"); 
+		t1.start(); 
+		
+		Thread t2 = new Thread(myThread); 
+		t2.setName("线程2"); 
+		t2.start(); 
+		
+		Thread t3 = new Thread(myThread); 
+		t3.setName("线程3"); 
+		t3.start(); 
+		
+		Thread t4 = new Thread(myThread); 
+		t4.setName("线程4"); 
+		t4.start(); 
+	} 
+
+} 
+
+
+
+******************************************************************** 
+
+
+
+package com.hlss; 
+
+import java.util.List; 
+
+public class MyThread implements Runnable { 
+
+	private final List<Long> list = MultiThread.list; 
+	
+	@Override 
+		public void run() { 
+			for (int i = 0; i < list.size();) { 
+				// 同步list，打印数据并删除该数据 
+				synchronized (list) { 
+				try { 
+					//当前线程睡眠，让其它线程获得执行机会 
+					Thread.sleep(100); 
+				} catch (InterruptedException e) { 
+					
+				} 
+							System.out.println(Thread.currentThread().getName() + ":" + list.get(i)); 
+				list.remove(i); 
+			} 
+		} 
+	} 
+} 
+
+
+
+******************************************************************** 
+
+运行结果： 
+
+线程1:1 
+线程1:2 
+线程1:3 
+线程4:4 
+线程4:5 
+线程4:6 
+线程4:7 
+线程3:8 
+线程2:9 
+线程2:10 
+线程4:11 
+线程4:12 
+线程1:13 
+线程2:14 
+线程3:15 
+线程3:16 
+线程3:17 
+线程3:18 
+线程3:19 
+线程3:20 
+线程3:21 
+线程3:22 
+线程3:23 
+线程3:24 
+线程3:25 
+线程3:26 
+线程3:27 
+线程1:28 
+线程4:29 
+线程4:30 
+线程3:31 
+线程2:32 
+线程2:33 
+线程2:34 
+线程2:35 
+线程4:36 
+线程4:37 
+线程1:38 
+线程2:39 
+线程3:40 
+线程3:41 
+线程1:42 
+线程1:43 
+线程1:44 
+线程1:45 
+线程4:46 
+线程3:47 
+线程3:48 
+线程2:49 
+线程2:50 
+线程4:51 
+线程1:52 
+线程2:53 
+线程3:54 
+线程1:55 
+线程1:56 
+线程4:57 
+线程4:58 
+线程3:59 
+线程2:60 
+线程2:61 
+线程2:62 
+线程2:63 
+线程4:64 
+线程4:65 
+线程4:66 
+线程1:67 
+线程2:68 
+线程2:69 
+线程3:70 
+线程3:71 
+线程3:72 
+线程1:73 
+线程1:74 
+线程4:75 
+线程3:76 
+线程3:77 
+线程2:78 
+线程2:79 
+线程2:80 
+线程2:81 
+线程2:82 
+线程4:83 
+线程4:84 
+线程4:85 
+线程4:86 
+线程4:87 
+线程4:88 
+线程4:89 
+线程4:90 
+线程4:91 
+线程4:92 
+线程4:93 
+线程4:94 
+线程4:95 
+线程4:96 
+线程1:97 
+线程1:98 
+线程2:99 
+线程3:100 
+
+```
+*   好奇为什么在有synchroniezed方法的同时会出现Collections.synchronizedList
+
+*   Collections.synchronizedList可以得到本身不是线程安全的容易的线程安全的状态
+
+*   线程安全仅仅指的是如果直接使用它提供的函数，比如:add(obj);或者poll(obj);，这样我们自己不需要做任何同步
+
+*   Collections.synchronizedList返回的线程安全的List内部使用的锁是list
+
+*   可以实现线程安全性
