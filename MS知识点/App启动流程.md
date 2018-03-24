@@ -40,6 +40,16 @@ ActivityThread随后依次调用Looper.prepareLoop()和Looper.loop()来开启消
 
 ![启动Activity](https://upload-images.jianshu.io/upload_images/851999-9f76d2f18051881c.jpg?imageMogr2/auto-orient/)
 
+* Launcher通过Binder进程间通信机制通知ActivityManagerService，它要启动一个Activity；
+
+* ActivityManagerService通过Binder进程间通信机制通知Launcher进入Paused状态；
+
+* Launcher通过Binder进程间通信机制通知ActivityManagerService，它已经准备就绪进入Paused状态，于是ActivityManagerService就创建一个新的进程，用来启动一个ActivityThread实例，即将要启动的Activity就是在这个ActivityThread实例中运行；
+
+* ActivityThread通过Binder进程间通信机制将一个ApplicationThread类型的Binder对象传递给ActivityManagerService，以便以后ActivityManagerService能够通过这个Binder对象和它进行通信；
+
+* ActivityManagerService通过Binder进程间通信机制通知ActivityThread，现在一切准备就绪，它可以真正执行Activity的启动操作了。
+
 ## [Android Application启动流程分析](https://www.jianshu.com/p/a5532ecc8377)
 
 ## [Android应用启动流程分析](http://solart.cc/2016/08/20/launch_app/)

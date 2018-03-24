@@ -1,0 +1,200 @@
+bitmap内存占用的计算方式，如何优化加载图片
+===
+
+## bitmap内存占用的计算方式
+
+Android中一张图片（BitMap）占用的内存主要和以下几个因数有关：图片长度，图片宽度，单位像素占用的字节数。 一张图片（BitMap）占用的内存=图片长度*图片宽度*单位像素占用的字节数 注：图片长度和图片宽度的单位是像素。
+
+### 图片格式一个像素占用字节 
+
+Alpha_8 ： 1 
+Kindex ： 1 
+RGB_565 ： 2
+ARGB_4444 ： 2 
+RGBA_8888 ： 4 
+BGRA_8888 ： 4
+
+### 内存计算
+
+* 1.首先计算scaledWidth和scaledHeight(源码中计算内存的需要的宽高) 
+scaledWidth=int(图片宽度*手机屏幕密度/图片文件夹(hdpi)+ 0.5) 
+scaledHeight=int(图片高度*手机屏幕密度/图片文件夹(hdpi)+ 0.5) 
+
+* 2.内存计算 
+total=scaledWidth*scaledHeight*占用字节例如:一个500*800的图片,图片格式为RGBA_8888格式,放在xhdpi目录下,在小米6上所占内存是 
+int( 500 * 420/ 480f + 0.5) *int( 800 * 420/ 480f + 0.5) *4=1227276B
+
+### 内存占用原理
+
+另外，需要注意这里的图片占用内存是指在Navtive中占用的内存，当然BitMap使用的绝大多数内存就是该内存。 因为我们可以简单的认为它就是BitMap所占用的内存。 Bitmap对象在不使用时,我们应该先调用recycle()，然后才它设置为null. 虽然Bitmap在被回收时可以通过BitmapFinalizer来回收内存。但是调用recycle()是一个良好的习惯.
+
+在Android4.0之前，Bitmap的内存是分配在Native堆中，调用recycle()可以立即释放Native内存。 从Android4.0开始，Bitmap的内存就是分配在dalvik堆中，即JAVA堆中的，调用recycle()并不能立即释放Native内存。但是调用recycle()也是一个良好的习惯。
+
+## 优化加载图片
+
+### 1、OOM 引起与表现
+
+在 Android 这种移动设备上，如果代码没有处理好，很容易引发内存持续占用与泄漏，导致 `OOM（OutOfMemoryError）` 异常，进而导致 App 程序 Crash 挂掉。
+
+在 Android 开发中，一个典型的 OOM 异常如下：
+
+![OOM 异常](http://img.blog.csdn.net/20160307093435207)
+
+一旦碰上了这类错误，我们往往需要去排查内存了。导致 OOM 的一些情况比较常见，大多数情况下，大家可能遇到的都是同一种情况：
+
+*   Activity 泄漏导致；
+*   层次庞大复杂的 View 视图导致；
+*   大量图片持续占用导致；
+*   其他资源持续未释放导致。
+
+### 2、Android Studio 查看内存占用
+
+在 Android Studio 里面，我们可以在 `Monitors` 窗口中，实时对 App 内存进行监控，我们可以看出 App 的 `HeapSize` 、`已经使用的内存大小`、`剩余内存大小`以及`峰值变化`。有了这些信息，我们可以在某个页面打开和关闭时进行监控，从而对比该页面占用内存变化，可以很方便的定位问题。
+
+![Monitors 查看内存占用](http://img.blog.csdn.net/20160307093451613)
+
+在这张图中，如果已使用的内存大小（`Allocated`）接近到 `HeapSize` 的大小，App 将会处于非常危险的状态中，很有可能下一个操作就会直接导致 OOM，通过 Android Studio，我们可以防患于未然，在 Debug 阶段进行预防。
+
+### 3、adb 查看内存占用
+
+`adb` 工具也是一个非常有用的工具，我们可以通过它来查看 App 内存占用。
+
+#### 3.1、查看 JVM 的 `HeapSize` 等参数
+
+通过命令 `adb shell getprop dalvik.vm.heapsize` 可以直接查看 Dalvik 虚拟机为 App 规定的最大 `HeapSize`：
+
+![getprop dalvik.vm.heapsize](http://img.blog.csdn.net/20160307093512421)
+
+一般来说，App 可达到的最大 HeapSize 为 `dalvik.vm.heapgrowthlimit` 所规定的大小。但是如果我们在 `AndroidManifest.xml` 中为 Application 添加 `android:largeHeap="true"` 属性，App 可达到的最大 HeapSize 则被调整为 `dalvik.vm.heapsize` 规定的值。
+
+虽然添加 `android:largeHeap="true"` 属性将大大降低 OOM 的概率，但除非万不得已的情况下，否则不要使用该属性。出现 OOM 后，我们首先应该排查整个 App，找出内存瓶颈予以解决。
+
+#### 3.2、查看 App 内存占用
+
+通过命令 `adb shell dumpsys meminfo [package_name]` 可以查看 App 所占用内存：
+
+![dumpsys meminfo 查看内存占用](http://img.blog.csdn.net/20160307093539708)
+
+通过这个命令，App 所占资源情况一目了然，甚至我们可以看到整个 App 中 View 个数、Activity 个数——这对于排查 Activity 泄漏和优化 View 层级也是非常有帮助的。
+
+### 4、图片加载导致 OOM
+
+而在一个 App 中，图片处理不恰当往往是 OOM 错误出现的元凶——因为 App 中所有图片动辄占用几十 M 的内存。如果我们能优先着手排查这一块，将会对 App 的内存优化带来 `最直接最明显` 的改观。而图片的不恰当处理操作一般有如下一些：
+
+*   直接加载 `超大尺寸` 图片；
+*   图片加载后 `未及时释放`；
+*   在页面中，同时加载 `非常多` 的图片；
+
+#### 4.1、超大尺寸图片处理
+
+现在的手机摄像头像素比较高，摄制出来的照片尺寸非常大，比如在一款还算老旧的手机上面，拍摄的图片尺寸竟然达到了 `2368 x 4224`！因为采用 jpeg 格式的缘故，这张图片在磁盘上才1.9M，但如果我们不加任何处理，按原尺寸加载到内存中，占用的内存将会非常可观。
+
+所以，针对大图的加载，比较常用的方法是进行 `DownSampling(向下采样)`，许多博客或技术站点对该方案有详细的描述，在此不再赘述，简单原理用代码表述如下：
+
+```java
+public static int calcInSampleSize(
+        int width, int height, int requestWidth, int requestHeight) {
+
+    int inSampleSize = 1;
+    if (requestWidth <= 0 || requestHeight <= 0) {
+        return inSampleSize;
+    }
+
+    if (width > requestWidth || height > requestHeight) {
+        int widthRatio = Math.round((float) width / (float) requestWidth);
+        int heightRatio = Math.round((float) height / (float) requestHeight);
+
+        inSampleSize = Math.min(widthRatio, heightRatio);
+    }
+
+    return inSampleSize;
+}
+
+public static Bitmap decodeBitmapFromUri(
+    Context context, Uri uri, int requestWidth, int requestHeight) {
+
+    BitmapFactory.Options options = getResourceOptions(context, uri);
+    options.inSampleSize = calcInSampleSize(
+            options.outWidth, options.outHeight, requestWidth, requestHeight);
+    options.inJustDecodeBounds = false;
+
+    // ...
+
+    ContentResolver resolver = context.getContentResolver();
+    Bitmap bitmap = BitmapFactory.decodeStream(
+            resolver.openInputStream(uri), new Rect(), options);
+    // ...
+
+    return bitmap;
+}
+```
+
+这样，如果我们要加载一张图片到 View 上，我们可以通过 `view.getMeasuredWidth() 和 view.getMeasuredHeight()` 得到 View 的宽和高，然后按这个大小进行采样，得到的 Bitmap 将会是尺寸适合的图片，不会占用额外内存，图片在 View 上展示出来质量也比较高。
+
+#### 4.2、及时释放图片
+
+一般不要静态缓存图片，就算有缓存，也可以结合 **`LRU`** 机制来保证缓存图片的个数和占用内存。Android SDK 已经提供了 `LruCache` 类来实现 LRU 机制。
+
+#### 4.3、避免同时加载大量图片
+
+避免同一时间加载大量的图片，也可以为我们的内存优化提供不小的收益。比如，在一个 `ScrollView` 中有非常多的 ImageView，这时候，占用的内存往往非常客观，因为就算一些 View 我们在屏幕视野里面看不到，它还是持续占用内存。我们可以通过 `RecyclerView` 或者 `ListView` 来予以替换，从而达到内存优化的效果。
+
+在我的开发过程中，就遇到了这样一个例子。一个页面用 ScrollView 来布局，里面有 26 张左右的图片，这时候，整个 App 的内存占用长期达到了 `90M` 左右！一直徘徊在 OOM 边缘。在我把这个页面用 RecyclerView 替换掉 ScrollView 后，整个 App 内存竟然下降了 `40M` 之多！！！整个 App 变得非常顺滑。
+
+### 5、采用开源库加载图片
+
+现在已经有非常多的图片加载库供我们使用了，比较流行的有：`Fresco`、`Universal-Image-Loader`、`Picasso`、`Volley` 等等。这些开源库一般来说，对内存的优化已经比较全面了，比我们自己手工管理内存来的好。所以，可以根据项目的实际情况灵活选用。
+
+比如，我目前所使用的 `Fresco` 库，就可以灵活设定图片尺寸，避免加载大尺寸的图片（`setResizeOptions`）：
+
+```java
+public static void displayImage(DraweeView draweeView, Uri uri) {
+    Size size = getAppropriateSize(draweeView);
+
+    ImageRequest request = ImageRequestBuilder
+            .newBuilderWithSource(uri)
+            .setResizeOptions(new ResizeOptions(size.mWidth, size.mHeight))
+            .setAutoRotateEnabled(true)
+            .build();
+
+    DraweeController controller = Fresco.newDraweeControllerBuilder()
+            .setUri(uri)
+            .setImageRequest(request)
+            .setOldController(draweeView.getController())
+            .build();
+
+    draweeView.setController(controller);
+}
+
+private static Size getAppropriateSize(View view) {
+    int width = view.getMeasuredWidth();
+    int height = view.getMeasuredHeight();
+
+    if (width <= 0 || height <= 0) {
+        width = view.getWidth();
+        height = view.getHeight();
+    }
+
+    Size size = MiscUtils.getScreenSize();
+    if (width <= 0 || height <= 0 || width > size.mWidth || height > size.mHeight) {
+        width = size.mWidth;
+        height = size.mHeight;
+    }
+
+    return new Size(width, height);
+}
+```
+
+当然，我们还要在 `ImagePipelineConfig` 中开启 `DownSampling`（`setDownsampleEnabled(true)`）：
+
+```java
+
+public static void initFresco(Context context) {
+    ImagePipelineConfig config = ImagePipelineConfig
+            .newBuilder(context)
+            .setDownsampleEnabled(true)
+            .build();
+
+    Fresco.initialize(context, config);
+}
+```

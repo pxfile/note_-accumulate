@@ -1,0 +1,26 @@
+View的绘制流程
+===
+* [Android进阶——Android视图工作机制之measure、layout、draw](http://blog.csdn.net/qq_30379689/article/details/54588736)
+
+* [Android View 测量流程(Measure)完全解析](https://www.jianshu.com/p/3299c3de0b7d)
+
+* [Android View 绘制流程 源码解析](https://www.jianshu.com/p/bb7977990baa)
+
+View的绘制流程：OnMeasure()——>OnLayout()——>OnDraw()
+
+各步骤的主要工作：
+
+**_OnMeasure()：_**
+
+    测量视图大小。从顶层父View到子View递归调用measure方法，measure方法又回调OnMeasure。
+
+**_OnLayout()：_**
+
+    确定View位置，进行页面布局。从顶层父View向子View的递归调用view.layout方法的过程，即父View根据上一步measure子View所得到的布局大小和布局参数，将子View放在合适的位置上。
+
+**_OnDraw()：_**
+
+    绘制视图:ViewRoot创建一个Canvas对象，然后调用OnDraw()。六个步骤：①、绘制视图的背景；②、保存画布的图层（Layer）；③、绘制View的内容；④、绘制View子视图，如果没有就不用；⑤、还原图层（Layer）；⑥、绘制滚动条。
+
+![View绘制流程函数调用链](http://ou21vt4uz.bkt.clouddn.com/interview/custom_view/flow_img/view_measure.png)
+

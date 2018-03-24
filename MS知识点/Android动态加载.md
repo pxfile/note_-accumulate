@@ -296,3 +296,4 @@ public class DLClassLoader extends DexClassLoader {
 
 ## 参考
 [Android动态加载技术三个关键问题详解](http://www.infoq.com/cn/articles/android-dynamic-loading)
+[Android apk动态加载机制的研究（二）：资源加载和activity生命周期管理](http://blog.csdn.net/singwhatiwanna/article/details/23387079)
