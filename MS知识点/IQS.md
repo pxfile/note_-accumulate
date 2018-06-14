@@ -55,7 +55,7 @@ public class Singleton {
 	}
 }
 ```
-2.Java中的集合有哪些?解释一下HashMap?底部的数据结构?散列表冲突的处理方法,散列表是一个什么样的数据结构?HashMap是采用什么方法处理冲突的?
+2.Java中的集合有哪些?解释一下HashMap?底部的数据结构?散列表冲突的处理方法,散列表是一个**HashMap**的数据结构，HashMap是采用**链表**处理冲突的
 
 3.解释一下什么是MVP架构,画出图解,一句话解释MVP和MVC的区别?
 
@@ -96,6 +96,11 @@ public class Singleton {
 2.遇到困难是怎么解决的?
 
 3.如何与人相处,与别人意见相左的时候是怎么解决的,并举生活中的一个例子.
+
+由于每个人的立场、观点、阅历经验等不同，面对同一问题同一情况存在不同观点、意见相左的情况是很正常的情况
+首先 我会保持冷静理智的心态，绝不会因为别人的意见与自己相左就有情绪、甚至抱怨，而是会多从别人的角度来考虑问题，尽量找出彼此之间的分歧，如果出现确实不能协调的情况，也应以大局为重，一定做到对事不对人；同时也要多做自我总结、分析，看看是否是自己的问题呢，毕竟人无完人，不能一出现冲突就总想着是别人错了，而是应该多从自身角度寻找原因。
+其次 我会尝试从多种方式在适当的时候与对方加强沟通，只有以诚恳的态度通过沟通、交流，才能增进彼此的理解，减少彼此之间的猜疑、对立，才能使工作顺利开展下去；
+最后 我认为最重要的就是一定要多听别人的意见，领导的意见、同事的意见、无论对方是否支持自己的观点，都应广泛倾听，正所谓兼听则明、偏信则暗，也只有如此，才能真正形成良好的人际氛围，利于工作的开展。
 
 4.有没有压力特别大的时候?
 
@@ -157,15 +162,39 @@ Android面试需要准备内容的大致划分：（括号内为重要程度，�
 
 我会逐步更新各个知识点相关博客或资源，如果需要，建议关注。
 
-#### Android
+# Android
 
-*   Context的理解
+##   Context的理解
 
-*   [Activity生命周期、启动模式、IntentFilter匹配规则](http://www.jianshu.com/p/3b675e85f78a)
+#### 定义
 
-*   IPC：Serialzable、Parcelable、Binder、Socket
+* * *
 
-*   View事件体系
+Context通常被翻译成上下文，它在Android中代表场景。一个Context就是一个场景，一个场景代表着一组用户与应用交互的过程。比如听音乐、打电话、发短信，这都分别对应着一个场景。
+
+#### 实现
+
+* * *
+
+Context是一个抽象类，定义了访问应用环境全局信息的接口；包括访问应用程序资源、打开Activity(startActivity())、启动Service(startService())、发送广播，文件读写等。Activity，Service以及Application均继承自Context，所以我们经常使用的startActivity()，getResource()，getSharedPreference()，getExternalFilesDir()，deleteDatabase()等等方法都来自于Context。
+
+Activity，Service，Application并没有直接继承Context，而是继承自ContextWrapper。ContextWrapper是Context的包装类，内部包含一个Context的引用，指向Context的具体实现类ContextImpl。ContextWrapper内部的所有方法直接调用ContextImpl对应的方法。
+
+ContextImpl在ActivityThread创建Activity，Service以及Application时被实例化。所以每个应用都有多个ContextImpl实例。ContextImpl内部包含一个指向ActivityThread.PackageInfo的引用mPackageInfo。ContextImpl内部方法功能都是通过调用mPackageInfo对象来实现的。
+
+ActivityThread.PackageInfo是一个重量级类，每一个应用程序仅有一个ActivityThread.PackageInfo实例，所有ContextImpl内部的mPackageInfo都指向ActivityThread.PackageInfo的唯一实例。
+
+#### 使用区别
+
+* * *
+
+Application、Activity以及Service均继承自Context，在初始化ContextImpl时使用的参数不一样，所以对应的使用场景也不一样。
+
+##   [Activity生命周期、启动模式、IntentFilter匹配规则](http://www.jianshu.com/p/3b675e85f78a)
+
+##   IPC：Serialzable、Parcelable、Binder、Socket
+
+##   View事件体系
 
 *   View绘制流程
 
@@ -173,37 +202,65 @@ Android面试需要准备内容的大致划分：（括号内为重要程度，�
 
 *   Drawable（不重要）
 
-*   动画、绘图
+##   动画、绘图
 
-*   window、wm、wms
+##   window、wm、wms
 
-*   四大组件启动、工作流程（Activity至少看一下，AMS）
+##   四大组件启动、工作流程（Activity至少看一下，AMS）
 
-*   消息机制：looper、handler、MQ
+##   消息机制：looper、handler、MQ
 
-*   线程、线程池、多线程
+##   线程、线程池、多线程
 
-*   bitmap加载、缓存：LRUCache、DiskLruCache、LinkHashMap
+##   bitmap加载、缓存：LRUCache、DiskLruCache、LinkHashMap
 
-*   CrashHandler（一般）
+##   CrashHandler（一般）
 
-*   multidex（一般）
+当crash发生时，系统会回调UncaughtExceptionHandler
 
-*   Fragment、Service、SQLite、Webview
+应用发生Crash在所难免，但是如何采集crash信息以供后续开发处理这类问题呢？利用Thread类的uncaughtException 方法，在UNcaughtException方法中获取异常信息，在合适的时机将异常信息存在sdk卡中或者上传到服务器。
 
-*   [Android内存泄漏场景及解决方法](http://www.jianshu.com/p/f35ca324c285)
+开发人员分析异常信息然后修复。同时当发生crash时弹出一个对话框提示用户应用crash，然后再推出，这样用户体验更好。
 
-*   ANR的原因、解决方法
+`setDefaultUncaughtExceptionHandler`方法！`defaultUncaughtHandler`是Thread类的静态成员变量，所以如果我们将自定义的`UncaughtExceptionHandler`设置给Thread的话，那么当前进程内的所有线程都能使用这个UncaughtExceptionHandler来处理异常了。
 
-*   开源库（一般要求看过源码，知道原理）：Retrofit、RxAndroid、EventBus、Picasso（优点）、OKhttp3
+```
+public static void setDefaultUncaughtExceptionHandler(UncaughtExceptionHandler handler) {
+    Thread.defaultUncaughtHandler = handler;
+}
 
-*   持续集成Jenkins（不重要）
+```
 
-*   单元测试、测试用例（一般）
+(2)作者实现了一个简易版本的UncaughtExceptionHandler类的子类`CrashHandler`，[源码传送门](https://github.com/singwhatiwanna/android-art-res/blob/master/Chapter_13/CrashTest/src/com/ryg/crashtest/CrashHandler.java)
+CrashHandler的使用方式就是在Application的`onCreate`方法中设置一下即可
 
-*   插件化：Atlas、OSGI（一般）
+```
+//在这里为应用设置异常处理程序，然后我们的程序才能捕获未处理的异常
+CrashHandler crashHandler = CrashHandler.getInstance();
+crashHandler.init(this);
+```
 
-#### Java
+##   multidex（一般）
+
+##   Fragment、Service、SQLite、Webview
+
+##   [Android内存泄漏场景及解决方法](http://www.jianshu.com/p/f35ca324c285)
+
+##   ANR的原因、解决方法
+
+##   开源库（一般要求看过源码，知道原理）：Retrofit、RxAndroid、EventBus、Picasso（优点）、OKhttp3
+
+##   持续集成Jenkins（不重要）
+
+1.  一个自动构建过程，包括自动编译、分发、部署和测试等。
+2.  一个代码存储库，即需要版本控制软件来保障代码的可维护性，同时作为构建过程的素材库。
+3.  一个持续集成服务器。本文中介绍的 Jenkins 就是一个配置简单和使用方便的持续集成服务器。
+
+##   单元测试、测试用例（一般）
+
+##   插件化：Atlas、OSGI（一般）
+
+# Java
 
 *   Java基础：比如接口和抽象类的区别等
 

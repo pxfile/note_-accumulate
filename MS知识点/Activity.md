@@ -51,6 +51,26 @@ activity是独立平等的，用来处理用户操作。几乎所有的activity�
  - activity的前后台切换会在 onResume() 调用和 onPause() 之间发生。
  因为这个状态可能会经常发生转换，为了避免切换迟缓引起的用户等待，这两个方法中的代码应该相当地轻量化。
 
+## Activity跳转生命周期的执行
+A Actiivty 中打开B Activity，A，B生命周期的执行，分别是在哪个生命周期中跳转和返回的
+
+打开 A ：
+onCreate-》onStart-》onResume
+跳转B：
+A：onPause
+B：onCreate-》onStart-》onResume
+A：onStop
+返回A：
+B：onPause
+A：onRestart-》onStart-》onResume
+B：onStop-》onDestroy
+
+用singleTop或者singleTask或singleInstance，正确的生命周期是：onNewIntent——onRestart——onStart——onResume。
+
+无论是否配置了android:configChanges=”orientation|screenSize”
+锁屏时（按Home键也是一样）：onPause()——>onSaveInstanceState()——>onStop()
+解锁时：onRestart()——>onStart()——>onResume()
+
 ## activity被回收的状态和信息保存和恢复过程   
 
 

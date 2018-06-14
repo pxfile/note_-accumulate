@@ -203,9 +203,9 @@ public E get(int key)
 public E get(int key, E valueIfKeyNotFound)
 ```
 查找键值
-`
+```
 public int keyAt(int index)
-`
+```
 
 注意上面的keyAt 因为内部使用了二分查找 找不到时返回小于0的数值，而不是返回-1
 
@@ -214,11 +214,11 @@ public int keyAt(int index)
 
 * 1.分页
 
-* 2.contentView+ViewHolder
+* 2.convertView+ViewHolder
 
-**contentView**
+**convertView**
 
-Adapter 类中 getView方法是重中之重 因为listView最主要的显示和处理都在这里面 contentView是getView中的参数
+Adapter 类中 getView方法是重中之重 因为listView最主要的显示和处理都在这里面 convertView是getView中的参数
 
 这是一个缓存机制 缓存可视范围中的view 上下滚动列表时 只创建之前缓存内没有的view 删除可视范围外的view 并形成新的缓存
 
@@ -228,9 +228,9 @@ Adapter 类中 getView方法是重中之重 因为listView最主要的显示和�
 
 将view视图保存 保存的是指向之前视图的引用 避免重复调用findViewById 影响效率
 
-有效果 但效果不大 总得来说还是contentView的效果极其明显
+有效果 但效果不大 总得来说还是convertView的效果极其明显
 
-下面是一个使用了contentView+ViewHolder的代码
+下面是一个使用了convertView+ViewHolder的代码
 
     @Override
     public View getView(finalint position, View convertView, ViewGroup parent) {
@@ -372,7 +372,7 @@ editor.putString("param1", "eva");
 editor.putInt("param2", 250);
 editor.commit();//2.3之后可以使用editor.apply(); 异步操作
 ```
-9.众多的drawable文件夹都有什么不同?
+## 众多的drawable文件夹都有什么不同?
 
 * 对分辨率进行区分 系统会自动使用分辨率下的资源
 也可使用一些范围来标识尺寸 
