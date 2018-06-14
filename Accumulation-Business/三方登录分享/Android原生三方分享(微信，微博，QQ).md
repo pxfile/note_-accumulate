@@ -1,5 +1,5 @@
 # Android原生三方分享
-### 微信分享
+## 微信分享
 根据官方API的[Android接入指南](https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=1417751808&token=&lang=zh_CN)接入微信SDK，导入相应的jar包，下载官方[demo](https://open.weixin.qq.com/zh_CN/htmledition/res/dev/download/sdk/WeChatSDK_sample_Android.zip)参考
 
 * 微信分享是指第三方App通过接入该功能，让用户可以从App分享文字、图片、音乐、视频、网页至微信好友会话、朋友圈或添加到微信收藏。
@@ -286,7 +286,7 @@
     }
 ```
 
-### 微博分享
+## 微博分享
 我们到[官方文档](https://github.com/sinaweibosdk/weibo_android_sdk)下载相应的官方demo并且多看看项目的ReadeMe，写的很详细让你少走弯路。
 集成完微博sdk后调用API就可以分享了，如下代码：
 
@@ -394,7 +394,7 @@
     }
 ```
 
-###QQ，QQ空间分享
+## QQ，QQ空间分享
 根据官方文档，开发者注册、应用创建，开发环境配置集成SDK，进行内容分享
 
 **新建Tencent实例**

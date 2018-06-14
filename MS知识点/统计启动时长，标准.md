@@ -1,0 +1,75 @@
+android 统计启动时长，标准
+===
+
+
+## 一.启动的类型
+
+### 冷启动
+application没有被创建，需要先创建进程，然后启动MainActivity。由于这个过程需要fork一个新进程，所以耗时。
+
+### 热启动
+同上面对照，已经启动过application，并驻留在系统内存内，只是需要唤醒该进程，并启动MainActivity。
+
+## 二：统计启动时间
+
+### 物理统计
+
+通过高速相机，从点击launcher上面的图标开始，到MainActivity的第一个可见帧，算作启动时间。
+
+### adb 统计
+
+adb shell am start -w pageage/activityname  通过这条命令启动，可以获得启动时间。
+
+```
+$ adb shell am start -W com.abc.test/com.abc.test.MainActivity
+Starting: Intent { act=android.intent.action.MAIN cat= Status: ok
+Activity: com.speed.test/.HomeActivity
+ThisTime: 496 TotalTime: 496 WaitTime: 503 Complete
+```
+### 线上版本统计
+
+如果是在线上版本，无法使用命令统计，我们分析下，所谓冷启动，就是创建applicaiton开始，一直到MainActivity第一个可视画面。
+
+applicaiton 创建，可以从`attachBaseContext()`开始，得到startTime。MainActivity的第一个可视画面，onResume其实还没有看到画面，最合适的回调是onWindowFocusChanged，也就是获得焦点。
+
+但是这个回调需要做适当的过滤，就能获得endTime。
+
+所以冷启动就是两个时间差。热启动的startTime 就是MainActivity的onRestart。
+
+如果获取onWindowFocusChanged 的时间，需要结合MainActivity的整个生命周期。
+
+这里有2个关键点，activity的启动流程 & applicaiton到activity的生命周期。
+
+activity启动流程：
+
+从launcher点击应用图标，launcher调用startactivity，
+
+通过binder机制可以理解，所有的服务最终都会通过AMS。
+
+AMS首先会通过zygote fork出进程。进程启动后准备好looper & 消息队列。然后调用 `attach` 方法将应用进程绑定到 `ActivityManagerService`，然后进入 `loop` 循环，不断地读取消息队列里的消息，并分发消息。
+
+AMS保存进程的代理对象，然后AMS通过该进程，创建activity的实例& 执行各生命周期。
+
+所以整个冷启动的流程如下：
+```
+-> Application 构造函数
+-> Application.attachBaseContext()
+-> Application.onCreate()
+-> Activity 构造函数
+-> Activity.setTheme()
+-> Activity.onCreate()
+-> Activity.onStart()
+-> Activity.onResume()
+-> Activity.onAttachedToWindow
+-> Activity.onWindowFocusChanged
+```
+#### 冷启动
+```
+Application.attachBaseContext():startTime
+Activity.onWindowFocusChanged:endTime
+```
+#### 热启动
+```
+Activity.onStart():startTime
+Activity.onWindowFocusChanged:endTime
+```
